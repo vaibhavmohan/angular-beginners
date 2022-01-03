@@ -1,0 +1,85 @@
+<div class="row">
+    <div class="col-md-4" style="border:1px solid grey;border-radius:4px;margin:10px 30px;padding:5px;">
+        <h1>Template Driven Form</h1>
+        <!-- 
+            In the form element angular by default applies a directive here that is called ng form.
+
+            So with this first selector here, when Angular finds a form element without these attributes here,
+            form:not([ngNoForm]):not([formGroup])
+            it's going to automatically apply the ng-form directive on that element.
+            ng-form
+
+            this directive has an output property ngSubmit and as you remember, use output properties to raise custom events.that we can use in our event binding expressions.
+         -->
+        <form action="" #f="ngForm" (submit)="onSubmit(f)">
+            <!-- 
+                Similar to ngModel. You can get a reference to this directive using a template variable.
+                #contact="ngModelGroup"
+             -->
+            <div ngModelGroup="contact" #contact="ngModelGroup">
+                <div class="form-group">
+                    <label for="firstname"></label>
+                    <!-- 
+                        when you apply the ng model directive on an input field.
+                        In its simplest form, without any binding, angular will create and control object associated with
+                        this input field under the hood. 
+                        ngModel name="firstname"
+    
+    
+                        firstname="ngModel" 
+                        So when Angular sees this, it's going to set this template variable to the ngModel directive that is applied on this input field.
+    
+                        and then we can pass this valuable to our log method.
+                        (change)="log(firstname)
+    
+    
+                        When we apply the ng model directive, along with the name attribute and an input field, Angular
+                        automatically creates an instance of the form control class and associated with this input field.
+                        ngModel name="firstname" #firstname="ngModel"  (change)="log(firstname)"
+                    -->
+                    <input id="firstname" required minlength="5" ngModel name="firstname" #firstname="ngModel" (change)="log(firstname)" type="text" class="form-control">
+                    <div *ngIf="firstname.touched && firstname.invalid" class="alert alert-danger">
+                        <div *ngIf="firstname.errors?.required">Firstname is required.</div>
+                        <div *ngIf="firstname.errors?.minlength">Minimum {{firstname.errors?.minlength.requiredLength}} characters are required</div>
+                    </div>
+                </div>
+                <div *ngIf="!contact.valid">
+                    ...
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="comment"></label>
+                <textarea required ngModel name="comment" id="comment" cols="30" rows="10" class="form-control"></textarea>
+            </div>
+            <div class="checkbox">
+                <label >
+                    <input ngModel name="checkbox" type="checkbox"> Subscribe For More!
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="">Contact Method</label>
+                {{contact_method | json}}
+                <select multiple ngModel name="contact_method" id="contactMethod" class="form-control">
+                    <option value=""></option>
+                    <option *ngFor="let cm of contact_method" [ngValue]="cm">
+                        {{cm.value}}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <div *ngFor="let cm of contact_method">
+                    <label>
+                    <input type="radio" ngModel name="contact_method_radio" [value]="cm">
+                    {{ cm.value | titlecase}}</label>
+                </div>
+            </div>
+
+            {{f.value|json}}
+            <button class="btn btn-primary" [disabled]="!f.valid">Submit</button>
+        
+        </form>
+        
+    </div>
+</div>
+
+
